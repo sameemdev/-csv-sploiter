@@ -1,4 +1,4 @@
-#How to run this application?
+# How to run this application?
 
 ```sh
 # Step 1: Clone the repository using the project's Git URL.

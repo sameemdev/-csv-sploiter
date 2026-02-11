@@ -1,10 +1,10 @@
 import { useCallback, useRef, useState } from "react";
-import { Upload, FolderOpen, X } from "lucide-react";
+import { Upload, FolderOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCsvStore } from "@/lib/csv-store";
 
 export function FileUpload() {
-  const addCsv = useCsvStore((s) => s.addCsv);
+  const addCsv = useCsvStore((s) => s.addCsv); // We'll still use addCsv to store content
   const [isDragging, setIsDragging] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const folderRef = useRef<HTMLInputElement>(null);
@@ -12,13 +12,15 @@ export function FileUpload() {
   const processFiles = useCallback(
     (files: FileList | File[]) => {
       Array.from(files).forEach((file) => {
-        if (!file.name.toLowerCase().endsWith(".csv")) return;
         const reader = new FileReader();
         reader.onload = (e) => {
           const text = e.target?.result as string;
-          if (text) addCsv(file.name, text);
+          if (text) addCsv(file.name, text); // Store the content
         };
-        reader.readAsText(file);
+        reader.onerror = () => {
+          console.error(`Failed to read file: ${file.name}`);
+        };
+        reader.readAsText(file); // Works for any text-based file
       });
     },
     [addCsv]
@@ -33,13 +35,19 @@ export function FileUpload() {
     [processFiles]
   );
 
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  }, []);
+
+  const handleDragLeave = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
   return (
     <div
-      onDragOver={(e) => {
-        e.preventDefault();
-        setIsDragging(true);
-      }}
-      onDragLeave={() => setIsDragging(false)}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
         isDragging
@@ -49,7 +57,7 @@ export function FileUpload() {
     >
       <Upload className="mx-auto h-10 w-10 text-muted-foreground mb-3" />
       <p className="text-sm font-medium mb-1">
-        Drag & drop CSV files or folders here
+        Drag & drop files or folders here
       </p>
       <p className="text-xs text-muted-foreground mb-4">
         Files will be auto-indexed by filename
@@ -75,7 +83,7 @@ export function FileUpload() {
       <input
         ref={fileRef}
         type="file"
-        accept=".csv"
+        accept="*/*" // Allow any file
         multiple
         className="hidden"
         onChange={(e) => e.target.files && processFiles(e.target.files)}
@@ -83,7 +91,7 @@ export function FileUpload() {
       <input
         ref={folderRef}
         type="file"
-        accept=".csv"
+        accept="*/*"
         multiple
         className="hidden"
         {...({ webkitdirectory: "", directory: "" } as any)}

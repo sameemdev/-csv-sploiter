@@ -7,7 +7,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { ChevronRight, Database, X, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 
 const INDEX_COLORS: Record<string, string> = {
@@ -43,10 +43,13 @@ export function FieldPanel() {
   const getFieldsForIndex = useCsvStore((s) => s.getFieldsForIndex);
   const indexNames = Object.keys(indexes);
 
-  const addFilter = (field: string, value: string) => {
-    const filter = `${field}="${value}"`;
-    setSearchQuery(searchQuery ? `${searchQuery} ${filter}` : filter);
-  };
+  const addFilter = useCallback(
+    (field: string, value: string) => {
+      const filter = `${field}="${value}"`;
+      setSearchQuery(searchQuery ? `${searchQuery} ${filter}` : filter);
+    },
+    [searchQuery, setSearchQuery]
+  );
 
   if (indexNames.length === 0) return null;
 
@@ -106,6 +109,22 @@ function IndexGroup({
   const fields = open ? getFields() : [];
   const colorClass = getIndexColor(name);
 
+  const handleRemove = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      onRemove();
+    },
+    [onRemove]
+  );
+
+  const handleSelect = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      onSelect();
+    },
+    [onSelect]
+  );
+
   return (
     <Collapsible open={open} onOpenChange={setOpen}>
       <CollapsibleTrigger className="w-full">
@@ -118,10 +137,7 @@ function IndexGroup({
           <Badge
             variant="outline"
             className={`text-[10px] cursor-pointer ${colorClass}`}
-            onClick={(e) => {
-              e.stopPropagation();
-              onSelect();
-            }}
+            onClick={handleSelect}
           >
             {name}
           </Badge>
@@ -129,10 +145,7 @@ function IndexGroup({
             {index.rows.length} rows
           </span>
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onRemove();
-            }}
+            onClick={handleRemove}
             className="opacity-0 group-hover:opacity-100 transition-opacity"
           >
             <X className="h-3 w-3 text-muted-foreground hover:text-destructive" />

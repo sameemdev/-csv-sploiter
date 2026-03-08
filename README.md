@@ -5,18 +5,18 @@ This article introduces — CSV-Sploiter a tool which I built with Lovable (zero
 ## How to run this application?
 
 ```sh
-## Step 1: Clone the repository using the project's Git URL.
+Step 1: Clone the repository using the project's Git URL.
 git clone https://github.com/sameemdev/-csv-sploiter.git
 
-## Step 2: Navigate to the project directory.
+Step 2: Navigate to the project directory.
 cd csv-sploiter
 
-## Step 3: Install NodeJS.
+Step 3: Install NodeJS.
 
-## Step 4: Install the necessary dependencies.
+Step 4: Install the necessary dependencies.
 npm i
 
-## Step 5: Start the development server with auto-reloading and an instant preview.
+Step 5: Start the development server with auto-reloading and an instant preview.
 npm run dev
 ```
 

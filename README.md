@@ -1,4 +1,4 @@
-###-This article introduces — CSV-Sploiter a tool which I built with Lovable (zero code) free subscription. CSV-Sploiter takes CSV files containing collected artefacts and displays them in a clean, Splunk-style searchable interface. Visit https://sameemdev.github.io/cybersecurity/2026/02/11/collection-script-output-parser.html for instructions! 
+### This article introduces — CSV-Sploiter a tool which I built with Lovable (zero code) free subscription. CSV-Sploiter takes CSV files containing collected artefacts and displays them in a clean, Splunk-style searchable interface. Visit https://sameemdev.github.io/cybersecurity/2026/02/11/collection-script-output-parser.html for instructions! 
 
 
 # How to run this application?
